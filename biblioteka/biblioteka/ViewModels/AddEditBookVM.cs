@@ -10,5 +10,6 @@ namespace biblioteka.ViewModels
     {
         public BookVM Book { get; set; }
         public List<AuthorVM> Authors { get; set; }
+        public List<Category> Categories { get; set; }
     }
 }

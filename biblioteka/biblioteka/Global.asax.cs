@@ -10,6 +10,7 @@ using Autofac.Builder;
 using Autofac.Integration.Mvc;
 using biblioteka.Services;
 using biblioteka.Services.Interfaces;
+using biblioteka.DAL;
 
 namespace biblioteka
 {
@@ -18,7 +19,9 @@ namespace biblioteka
         protected void Application_Start()
         {
             var builder = new ContainerBuilder();
+            builder.RegisterType<LibraryContext>();
             builder.RegisterType<BookService>().As<IBookService>();
+            builder.RegisterType<CategoryService>().As<ICategoryService>();
             builder.RegisterControllers(System.Reflection.Assembly.GetExecutingAssembly());
             var container = builder.Build();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
