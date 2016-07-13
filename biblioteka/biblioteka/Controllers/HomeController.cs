@@ -1,4 +1,5 @@
-﻿using System;
+﻿using biblioteka.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +9,16 @@ namespace biblioteka.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IBookService _bookService;
+
+        public HomeController(IBookService bookService)
+        {
+            _bookService = bookService;
+        }
         public ActionResult Index()
         {
-            return View();
+            var books = _bookService.GetAllBooks();
+            return View(books);
         }
 
         public ActionResult About()

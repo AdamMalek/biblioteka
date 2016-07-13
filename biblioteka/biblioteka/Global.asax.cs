@@ -5,6 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Autofac;
+using Autofac.Builder;
+using Autofac.Integration.Mvc;
+using biblioteka.Services;
+using biblioteka.Services.Interfaces;
 
 namespace biblioteka
 {
@@ -12,6 +17,12 @@ namespace biblioteka
     {
         protected void Application_Start()
         {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<BookService>().As<IBookService>();
+            builder.RegisterControllers(System.Reflection.Assembly.GetExecutingAssembly());
+            var container = builder.Build();
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

@@ -1,5 +1,14 @@
-﻿@{
+﻿@model List<biblioteka.Models.Book>
+@{
     ViewBag.Title = "Home Page";
+}
+
+@foreach (var book in Model)
+{
+	<div class="book">
+		<h2>@book.ISBN</h2>
+		<h3>@book.Title</h3>
+	</div>
 }
 
 <div class="jumbotron">
