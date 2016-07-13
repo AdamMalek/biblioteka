@@ -9,17 +9,15 @@ namespace biblioteka.Models
     public class Book
     {
         public int Id { get; set; }
+        [Required]
+        [MaxLength(40)]
         public string Title { get; set; }
         public string ISBN { get; set; }
+        [Required]
         public double Price { get; set; }
-        public EBookState BookState { get; set; }
-        public virtual ICollection<Author> Author { get; set; }
+        public EBookState BookState { get; set; } = EBookState.Available;
+        public virtual Author Author { get; set; }
         public virtual Category Category { get; set; }
-
-        public Book()
-        {
-            Author = new List<Author>();
-        }
     }
 
     public enum EBookState
