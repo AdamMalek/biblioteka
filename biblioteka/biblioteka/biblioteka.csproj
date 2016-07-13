@@ -170,7 +170,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Author.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -178,9 +178,12 @@
     <Compile Include="Services\CategoryService.cs" />
     <Compile Include="Services\Interfaces\IBookService.cs" />
     <Compile Include="Services\Interfaces\ICategoryService.cs" />
+    <Compile Include="Services\Interfaces\IUserService.cs" />
+    <Compile Include="Services\UserService.cs" />
     <Compile Include="ViewModels\AddEditBookVM.cs" />
-    <Compile Include="ViewModels\AuthorVM.cs" />
     <Compile Include="ViewModels\BookVM.cs" />
+    <Compile Include="ViewModels\CategoryVM.cs" />
+    <Compile Include="ViewModels\UserVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -222,10 +225,9 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Books\Create.cshtml" />
+    <Content Include="Views\Books\CreateEdit.cshtml" />
     <Content Include="Views\Books\Delete.cshtml" />
     <Content Include="Views\Books\Details.cshtml" />
-    <Content Include="Views\Books\Edit.cshtml" />
     <Content Include="Views\Books\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

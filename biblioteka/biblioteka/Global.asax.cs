@@ -20,6 +20,7 @@ namespace biblioteka
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<LibraryContext>();
+            builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<BookService>().As<IBookService>();
             builder.RegisterType<CategoryService>().As<ICategoryService>();
             builder.RegisterControllers(System.Reflection.Assembly.GetExecutingAssembly());

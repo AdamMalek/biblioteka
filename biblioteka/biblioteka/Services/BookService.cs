@@ -12,10 +12,12 @@ namespace biblioteka.Services
     public class BookService : IBookService
     {
         private readonly LibraryContext _db;
+        private readonly IUserService _userService;
 
-        public BookService(LibraryContext db)
+        public BookService(LibraryContext db, IUserService userService)
         {
             _db = db;
+            _userService = userService;
         }
         public void AddBook(Book book)
         {
@@ -24,12 +26,36 @@ namespace biblioteka.Services
             _db.SaveChanges();
         }
 
-        public void ChangeBookState(int id, EBookState newState)
+        public void ChangeBookState(int id, EBookState newState, int userId= -1)
         {
             var book = GetBookById(id);
             if (book != null)
             {
-                book.BookState = newState;
+                switch (newState)
+                {
+                    case EBookState.Available:
+                        var oldUser = _userService.GetUserById(userId);
+                        oldUser.BooksBorrowed.Remove(book);
+                        book.User = null;
+                        break;
+                    case EBookState.Borrowed:
+                        if (book.User != null)
+                        {
+                            book.User.BooksBorrowed.Remove(book);
+                            var user = _userService.GetUserById(userId);
+                            user.BooksBorrowed.Add(book);
+                            book.User = user;                            
+                        }
+                        else
+                        {
+                            var user = _userService.GetUserById(userId);
+                            user.BooksBorrowed.Add(book);
+                            book.User = user;
+                        }
+                        break;
+                    default:
+                        break;
+                }
                 _db.SaveChanges();
             }
         }
@@ -46,12 +72,12 @@ namespace biblioteka.Services
 
         public List<Book> GetAllBooks()
         {
-            return _db.Books.Include("Author").Include("Category").ToList();
+            return _db.Books.Include("User").Include("Category").ToList();
         }
 
         public Book GetBookById(int id)
         {
-            return _db.Books.Include("Author").Include("Category").FirstOrDefault(x => x.Id == id);
+            return _db.Books.Include("User").Include("Category").FirstOrDefault(x => x.Id == id);
         }
 
         public void ModifyBook(int id, Book book)

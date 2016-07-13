@@ -14,6 +14,6 @@ namespace biblioteka.Services.Interfaces
         void AddBook(Book book);
         void ModifyBook(int id,Book book);
         void DeleteBook(int id);
-        void ChangeBookState(int id, EBookState newState);
+        void ChangeBookState(int id, EBookState newState, int userId = -1);
     }
 }

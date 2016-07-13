@@ -15,8 +15,10 @@ namespace biblioteka.Models
         public string ISBN { get; set; }
         [Required]
         public double Price { get; set; }
+        [Required]
+        public string Author { get; set; }
         public EBookState BookState { get; set; } = EBookState.Available;
-        public virtual Author Author { get; set; }
+        public virtual User User { get; set; }
         public virtual Category Category { get; set; }
     }
 
