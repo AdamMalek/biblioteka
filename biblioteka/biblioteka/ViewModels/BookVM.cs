@@ -8,6 +8,7 @@ namespace biblioteka.ViewModels
 {
     public class BookVM
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public string AuthorFullName { get; set; }
         public double Price { get; set; }
