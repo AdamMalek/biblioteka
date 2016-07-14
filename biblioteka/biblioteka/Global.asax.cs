@@ -19,7 +19,7 @@ namespace biblioteka
         protected void Application_Start()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<LibraryContext>();
+            builder.RegisterType<LibraryContext>().InstancePerRequest();
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<BookService>().As<IBookService>();
             builder.RegisterType<CategoryService>().As<ICategoryService>();

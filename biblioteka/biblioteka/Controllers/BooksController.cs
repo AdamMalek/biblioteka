@@ -25,27 +25,27 @@ namespace biblioteka.Controllers
         }
 
         // GET: Books
-        public ActionResult Index(string filter="")
+        public ActionResult Index(string FilterText = "",int SelectedCategoryId = -1)
         {
-            var books = _bookService.GetAllBooks().Where(x=> MatchFilter(filter,x)).ToList();
-            var booksVM = books.Select(x => CreateVM(x)).ToList();
-            return View(booksVM);
-        }
-
-        // GET: Books/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
+            IEnumerable<Book> books;
+            if (SelectedCategoryId != -1)
             {
-                return RedirectToAction("Index");
+                var category = _categoryService.GetCategoryById(SelectedCategoryId);
+                books = category?.Books;
             }
-            Book book = _bookService.GetBookById(id.Value);
-            if (book == null)
+            else
             {
-                return HttpNotFound();
+                books = _bookService.GetAllBooks();
             }
-            var vm = CreateVM(book);
-            return View(vm);
+            books = books.Where(x => MatchFilter(FilterText, x));
+            var booksVM = books.Select(x => CreateVM(x)).OrderBy(x=> x.Title).ToList();
+            var categories = _categoryService.GetAllCategories().Select(x => new CategoryVM { CategoryName = x.CategoryName, Id = x.Id }).ToList();
+            categories.Insert(0, new CategoryVM { Id = -1, CategoryName = "--------" });
+            return View(new BookListVM
+            {
+                Books = booksVM,
+                Categories = categories.OrderBy(x=> x.CategoryName).ToList()
+            });
         }
 
         // GET: Books/Create
@@ -53,14 +53,12 @@ namespace biblioteka.Controllers
         {
             var vm = new AddEditBookVM();
             vm.Book = new BookVM();
-            vm.Categories = _categoryService.GetAllCategories().Select(x => new CategoryVM { Id = x.Id, CategoryName = x.CategoryName }).ToList();
-            vm.Categories.Insert(0, new CategoryVM { Id = -1, CategoryName="Bez kategorii" });
-            return View("CreateEdit",vm);
+            vm.Categories = _categoryService.GetAllCategories().Select(x => new CategoryVM { Id = x.Id, CategoryName = x.CategoryName }).OrderBy(x=> x.CategoryName).ToList();
+            vm.Categories.Insert(0, new CategoryVM { Id = -1, CategoryName = "Bez kategorii" });
+            return View("CreateEdit", vm);
         }
 
         // POST: Books/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(AddEditBookVM vm)
@@ -96,7 +94,7 @@ namespace biblioteka.Controllers
             {
                 var vm = new AddEditBookVM();
                 vm.Book = CreateVM(book);
-                vm.Categories = _categoryService.GetAllCategories().Select(x => new CategoryVM { Id = x.Id, CategoryName = x.CategoryName }).ToList();
+                vm.Categories = _categoryService.GetAllCategories().Select(x => new CategoryVM { Id = x.Id, CategoryName = x.CategoryName }).OrderBy(x=> x.CategoryName).ToList();
                 vm.Categories.Insert(0, new CategoryVM { Id = -1, CategoryName = "Bez kategorii" });
                 return View("CreateEdit", vm);
             }
@@ -104,8 +102,6 @@ namespace biblioteka.Controllers
         }
 
         // POST: Books/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(AddEditBookVM vm)
@@ -120,7 +116,7 @@ namespace biblioteka.Controllers
                     Title = vm.Book.Title,
                     Category = (vm.Book.Category.Id != -1) ? _categoryService.GetCategoryById(vm.Book.Category.Id) : null
                 };
-                _bookService.ModifyBook(vm.Book.Id,newBook);
+                _bookService.ModifyBook(vm.Book.Id, newBook);
                 return RedirectToAction("Index");
             }
             return View("CreateEdit", vm);
@@ -151,7 +147,7 @@ namespace biblioteka.Controllers
         }
         private BookVM CreateVM(Book book)
         {
-            var vm =  new BookVM
+            var vm = new BookVM
             {
                 Id = book.Id,
                 Author = book.Author,
@@ -161,7 +157,7 @@ namespace biblioteka.Controllers
                 Title = book.Title
             };
 
-            if (book.Category !=null)
+            if (book.Category != null)
             {
                 vm.Category = new CategoryVM
                 {

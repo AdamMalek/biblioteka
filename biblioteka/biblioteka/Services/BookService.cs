@@ -34,7 +34,7 @@ namespace biblioteka.Services
                 switch (newState)
                 {
                     case EBookState.Available:
-                        var oldUser = _userService.GetUserById(userId);
+                        var oldUser = _userService.GetUserById(book.User.Id);
                         oldUser.BooksBorrowed.Remove(book);
                         book.User = null;
                         break;
@@ -56,6 +56,7 @@ namespace biblioteka.Services
                     default:
                         break;
                 }
+                book.BookState = newState;
                 _db.SaveChanges();
             }
         }

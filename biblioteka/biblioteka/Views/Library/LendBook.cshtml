@@ -1,0 +1,66 @@
+﻿@model biblioteka.ViewModels.LendBookVM
+
+@{
+    ViewBag.Title = "Wypożyczanie";
+}
+
+<h2>Wypożycz książkę</h2>
+
+<h3>Wybierz osobę, której książka zostanie wypożyczona</h3>
+<div>
+    <h4>Wypożycznie</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Tytuł
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Book.Title)
+        </dd>
+
+        <dt>
+            Autor
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Book.Author)
+        </dd>
+
+        <dt>
+            Kategoria
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Book.Category.CategoryName)
+        </dd>
+
+        <dt>
+            Cena
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Book.Price)
+        </dd>
+
+        <dt>
+            ISBN
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Book.ISBN)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+        <div class="form-actions no-color">
+            @Html.HiddenFor(x=> x.BookId)
+
+            @Html.DropDownListFor(x=> x.UserId ,Model.Users.Select(y=> new SelectListItem { Value = y.Id.ToString(), Text = y.FullName}),new { @class="form-control"})
+
+            <input type="submit" value="Wypożycz" class="btn btn-default" />
+        </div>
+    }
+</div>

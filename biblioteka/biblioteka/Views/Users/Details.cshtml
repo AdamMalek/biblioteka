@@ -1,0 +1,90 @@
+﻿@model biblioteka.ViewModels.UserDetailsVM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Szczegóły</h2>
+
+<div>
+    <h4>Użytkownik</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Imię
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            Nazwisko
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PESEL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PESEL)
+        </dd>
+
+    </dl>
+</div>
+<div>
+    <h4>Wypożyczone książki</h4>
+    <table class="table">
+        <tr>
+            <th>
+                Tytuł
+            </th>
+            <th>
+                Autor
+            </th>
+            <th>
+                Kategoria
+            </th>
+            <th>
+                ISBN
+            </th>
+            <th>
+                Cena
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Books)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISBN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                    zł
+                </td>
+                <td>
+                    @Html.ActionLink("Zwróć", "ReturnBook","Library", new { id = item.Id }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+<p>
+    @Html.ActionLink("Edycja użytkownika", "Edit", new { id = Model.Id })
+</p>

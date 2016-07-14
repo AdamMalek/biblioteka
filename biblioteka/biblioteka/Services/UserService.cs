@@ -21,6 +21,7 @@ namespace biblioteka.Services
             if (GetUserByPESEL(PESEL) == null)
             {
                 _db.Users.Add(new User { FirstName = firstName, LastName = lastName,PESEL = PESEL });
+                _db.SaveChanges();
             }
         }
 
@@ -47,12 +48,12 @@ namespace biblioteka.Services
 
         public IEnumerable<User> GetAllUsers()
         {
-            return _db.Users;
+            return _db.Users.Include("BooksBorrowed");
         }
 
         public User GetUserById(int id)
         {
-            return _db.Users.FirstOrDefault(x => x.Id == id);
+            return _db.Users.Include("BooksBorrowed").FirstOrDefault(x => x.Id == id);
         }
 
         public User GetUserByPESEL(string PESEL)
@@ -65,6 +66,12 @@ namespace biblioteka.Services
             var user = GetUserById(id);
             if (user != null)
             {
+                foreach (var book in user.BooksBorrowed)
+                {
+                    book.BookState = EBookState.Available;
+                    book.User = null;
+                }
+                user.BooksBorrowed.Clear();
                 _db.Users.Remove(user);
                 _db.SaveChanges();
             }

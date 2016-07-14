@@ -1,4 +1,4 @@
-﻿@model IEnumerable<biblioteka.ViewModels.BookVM>
+﻿@model biblioteka.ViewModels.BookListVM
 
 @{
     ViewBag.Title = "Lista książek";
@@ -10,29 +10,36 @@
     @Html.ActionLink("Dodaj nową", "Create")
 </p>
 
+
 @using (Html.BeginForm("Index", "Books", FormMethod.Get))
 {
-        <input type="text" style="float:left" placeholder="Wpisz wyszukiwane słowo" class="form-control" name="filter" />
-        <button style="float:right" type="submit" class="pull-left btn btn-info">Filtruj</button>
-        <div class="clearfix"></div>
+    <div class="form-group">
+        <div class="col-md-4">
+            @Html.DropDownListFor(model => Model.SelectedCategoryId, Model.Categories.Select(x => new SelectListItem { Text = x.CategoryName, Value = x.Id.ToString() }), new { @class = "form-control" })
+        </div>
+    </div>
+    @Html.TextBoxFor(x=> x.FilterText,new { @class="form-control", placeholder = "Wpisz wyszukiwane słowo", style = "float:left"})
+    @*<input type="text" style="float:left" placeholder="Wpisz wyszukiwane słowo" class="form-control" name="filter" />*@
+    <button style="float:right" type="submit" class="pull-left btn btn-info">Filtruj</button>
+    <div class="clearfix"></div>
 }
 
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            Tytuł
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Author)
+            Autor
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Category.CategoryName)
+            Kategoria
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Price)
+            Cena
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ISBN)
+            ISBN
         </th>
         <th>
             Stan książki
@@ -40,7 +47,7 @@
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.Books)
     {
         <tr>
             <td>
